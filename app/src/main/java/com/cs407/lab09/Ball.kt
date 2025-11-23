@@ -23,7 +23,7 @@ class Ball(
     private var isFirstUpdate = true
 
     init {
-        // TODO: Call reset()
+        reset()
     }
 
     /**
@@ -37,7 +37,18 @@ class Ball(
             accY = yAcc
             return
         }
+        val newVelocityX = velocityX+0.5f*(accX+xAcc)*dT
+        val newVelocityY = velocityY+0.5f*(accY+yAcc)*dT
+        val lx = velocityX*dT+(1f/6f)*(dT*dT)*(3*accX+xAcc)
+        val ly = velocityY*dT+(1f/6f)*(dT*dT)*(3*accY+yAcc)
 
+        accX = xAcc
+        accY = yAcc
+        velocityX = newVelocityX
+        velocityY = newVelocityY
+        posX += lx
+        posY += ly
+        checkBoundaries()
     }
 
     /**
@@ -48,6 +59,26 @@ class Ball(
     fun checkBoundaries() {
         // TODO: implement the checkBoundaries function
         // (Check all 4 walls: left, right, top, bottom)
+        val rightBoundary = backgroundWidth - ballSize
+        val bottomBoundary = backgroundHeight - ballSize
+        if (posX < 0f) {
+            accX = 0f
+            velocityX = 0f
+            posX = 0f
+        } else if (posX > rightBoundary) {
+            accX = 0f
+            velocityX = 0f
+            posX = rightBoundary
+        }
+        if (posY < 0f) {
+            accY = 0f
+            velocityY = 0f
+            posY = 0f
+        } else if (posY > bottomBoundary) {
+            accY = 0f
+            velocityY = 0f
+            posY = bottomBoundary
+        }
     }
 
     /**
@@ -57,5 +88,12 @@ class Ball(
     fun reset() {
         // TODO: implement the reset function
         // (Reset posX, posY, velocityX, velocityY, accX, accY, isFirstUpdate)
+        posX = (backgroundWidth - ballSize)/2f
+        posY = (backgroundHeight - ballSize)/2f
+        velocityX = 0f
+        velocityY = 0f
+        accX = 0f
+        accY = 0f
+        isFirstUpdate = true
     }
 }
